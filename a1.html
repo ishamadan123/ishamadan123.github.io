@@ -8,11 +8,96 @@
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
-  <body>
-    <h1>Example Student's Assignment 1!</h1>
+  <body style="background-color: #feffdb;">
+    <h1>Assignment 1: Blink</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
+      <img src="BlinkVideo.gif">
+      <p>
+        For this assignment, we were tasked with creating a schematic for at least 
+        3 LEDs connected to the Arduino, which I then implemented as a circuit on my breadboard.
+        <br> <br>
+        I used the following calculation to decide the resistors to use: V(Volts) = I (Amperes) * R (Ohms)
+        <br> <br>
+        The voltage of the Arduino is <b>5V</b>, and each LED light I chose to use 
+        (red, yellow, and red) each had a voltage drop of <b>1.8V</b> and a desired current of <b>20mA.</b>
+        Since this circuit is in <b>parallel</b>, we only need to use to voltage of a single LED.
+        <br><br>
+        (5-1.8) = 0.02A * R 
+        <br>
+        3.2 = 0.02 * R
+        <br>
+        R = 3.2 / 0.02
+        <br>
+       <b> R = 160 Ohms </b>
+       <br> <br>
+        I chose to use three <b>220 Ohms resistor</b>  instead of 160, because it just had to be greater than 
+        150, and might effect the brightness of the light, but would still function.
+      </p>
+      <!-- <img src="BlinkPhoto.jpg" /> -->
     </div>
+    <div class = "new-section">
+      <img src="Schematic.jpg" height="400" width="500" />
+      <img src="BlinkPhoto.jpg" height="400" width="500";/> 
+    </div>
+    <h2>Questions</h2>
+    <p>
+      Number 1: 
+      <img src="Graph.jpg" height="200" width="300"/>
+      <br>
+      Number 2: 
+      <br>
+      14 LEDs for 14 pins that can connect to the Arduino. The calculation is 14 times 0.02A
+      which is the current for each LED. This totals to <b>0.28A</b>
+      <br> <br>
+      Number 3: 
+      <br>
+      15 seconds (milli) entered into the code was when I could still see the lights blinking. once
+      I brought it down to 10 I could no longer see them blinking and it looked like lights on.
+      <br><br>
+
+    </p>
+
+    <h2>Arduino Code Snippet</h2>
+
+    <pre>
+        <code>
+          *
+          Blink HW Assignment #1
+          Isha Madan
+          HCDE 439
+        
+          Turns on first LED on for half a  second, then off for half a second, then the second LED turns 
+          on for half a second, then off for half a second, then the third LEF turns on for half a second, then 
+          off for a half a second. This repeats. 
+        */
+        
+        // the setup function runs once when you press reset or power the board
+        void setup() {
+          // initialize digital pins 8, 10, and 12, as an output, because my wires connected to those pins on the arduino
+          pinMode(8, OUTPUT);
+          pinMode(10, OUTPUT);
+          pinMode(12, OUTPUT);
+        }
+        
+        // the loop function runs over and over again forever
+        void loop() {
+          digitalWrite(8, HIGH);  // turn the first LED on (HIGH is the voltage level)
+          delay(15);                      // wait for a half a second
+          digitalWrite(8, LOW);   // turn the first LED off by making the voltage LOW
+          delay(15);                      // wait for half a second
+        
+          digitalWrite(10, HIGH);  // turn the second LED on (HIGH is the voltage level)
+          delay(15);                      // wait for a half a second
+          digitalWrite(10, LOW);   // turn the second LED off by making the voltage LOW
+          delay(15);                      // wait for a half a second
+        
+          digitalWrite(12, HIGH);  // turn the third LED on (HIGH is the voltage level)
+          delay(15);                      // wait for a half a second
+          digitalWrite(12, LOW);   // turn the third LED off by making the voltage LOW
+          delay(15);                      // wait for a half a second
+        }
+        
+        </code>
+    </pre>
   </body>
 </html>
