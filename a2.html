@@ -8,11 +8,97 @@
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
-  <body>
-    <h1>Example Student's Assignment 2!</h1>
+  <body style="background-color: #feffdb;">
+    <h1>Assignment 2: Fade</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
+      <img src="FadeVideo.gif" />
+      <img src="FadePhoto.jpg" />
     </div>
+    <br>
+    <h2>Introduction</h2>
+    <br>
+    <p>
+      For this assignment, we were tasked to create a schematic, circuit, and code 
+      that uses several LEDs, a button, tilt switch, or a switch I make myself, a for-loop, 
+      digitalWrite(), digitalRead(), and analogWrite(). Document your project on your webpage.
+      <br> <br>
+      I chose to use <b> three LED lights (one green, two yellow), and one button.</b>
+    </p>
+    <br>
+
+    <h2>The Set Up</h2>
+    <br>
+    <p>
+      I created a plan for my circuit using both a schematic drawing as well as visualizing
+      the wire connections before creating it on my breadboard.
+    </p>
+
+    <div class = "grid">
+      <img src="FadeSchematic.jpeg" height = "500" width = "650"/>
+      <img src="FadeTest.jpeg" height = "500" width = "650">
+    </div>
+
+    <br>
+
+    <div>
+      <h2>Arduino Code Snippet</h2>
+    <pre>
+        <code>
+          /*
+          Fade Assignment Code 
+        
+          Turns on and off three light emitting diodes(LED) connected to digital pins. One of these
+          three pins will fade in and out instead of turning on. When the button is not pushed, all 
+          of the lights will turn off. 
+          */
+        
+          // constant that doesn't change for the button pin value
+          const int buttonPin = 2;  // the number of the pushbutton pin
+        
+          // variables that will change
+          int buttonState = 0;  // variable for reading the pushbutton status
+          int brightness = 0;  // how bright the LED is
+          int fadeAmount = 5;  // how many points to fade the LED by
+        
+          void setup() {
+            pinMode(13, OUTPUT); // initialize first LED pin as output
+            pinMode(8, OUTPUT); // initialize second LED pin as output
+            pinMode(6, OUTPUT); // initialize third LED pin as output
+            pinMode(buttonPin, INPUT); // initialize the pushbutton pin as an input
+          }
+        
+          void loop() {
+            buttonState = digitalRead(buttonPin); // read the state of the pushbutton value
+          
+            // check if the pushbutton is pressed. If it is, the buttonState is HIGH
+            if (buttonState == HIGH) {
+              
+              digitalWrite(13, HIGH); // turn first LED on
+              digitalWrite(8, HIGH); // turn second LED on
+          
+              // for the third 3rd LED, fade in from min to max in increments of 5 points
+              for (int fadeValue = 0; fadeValue <= 255; fadeValue += 10) { 
+                analogWrite(6, fadeValue); // sets the value (range from 0 to 255)
+                delay(30); // wait for 30 milliseconds to see the dimming effect
+              }
+              // for the 3rd LED, fade out from max to min in increments of 5 points
+              for (int fadeValue = 255; fadeValue >= 0; fadeValue -= 10) {
+                analogWrite(6, fadeValue); // sets the value (range from 0 to 255)
+                delay(30); // wait for 30 milliseconds to see the dimming effect
+              }
+          
+            } else {
+              // the following happens when the pushbutton state isn't pressed, ie is LOW
+              digitalWrite(13, LOW); // turn first LED off
+              digitalWrite(8, LOW); // turn second LED off
+              digitalWrite(6, LOW); // turn third LED off
+            }
+          }
+        </code>
+    </pre>
+
+
+    </div>
+    
   </body>
 </html>
