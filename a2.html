@@ -31,6 +31,13 @@
     <p>
       I created a plan for my circuit using both a schematic drawing as well as visualizing
       the wire connections before creating it on my breadboard.
+
+      <br> <br> 
+      As you can see on the left photo below, I chose <b>10K Ohms</b> for the resistor on my switch circuit,
+      and <b>220 Ohms</b> for each LED light resistor. The 220 Ohms resistor produces a current of <b>14.54 mA</b> for 
+      each pin’s circuit, which is within the max current specification for green and yellow LED lights. Additionally, 
+      the <b>10K Ohms</b> resistor produces a current of 0.5mA. The reason I chose this resistor for the pull-down 
+      switch is because Arduino documentation recommends this value for digital input pins. 
     </p>
 
     <div class = "grid">
@@ -39,6 +46,26 @@
     </div>
 
     <br>
+
+    <h2>Questions</h2>
+    <br>
+    <p>
+      For Question #1, I drew a straight line at <b>5V</b> to represent the analogwrite at 255, which represents
+      the LED light being always on. 128 is about half of 255, meaning the voltage of that analog write will be around <b>2.5V</b>. 
+      With a similar calculation method, 64 is one-fourth of 255, meaning the voltage of that analog write will be around <b>1.25</b>.
+      I followed the pulse width modulation graphing methods with a <b>50% duty cycle</b> and <b>25% duty cycle</b>.
+      <br> <br>
+      For Question #2, I used a formula to calculate the runtime in hours. Since I used <b>220 Ohm</b> resistors on each of 
+      my 3 LEDs, I calculated the total forward current to be <b>43.62mA</b>. I continued (as seen below) to calculate the final runtime of 
+      <b>27.51</b> hours with the given battery capacity.
+    </p>
+    <div class = "grid">
+      <img src="FadeQuestionOne.jpeg" />
+      <img src="FadeQuestionTwo.jpeg" >
+    </div>
+
+    <br>
+
 
     <div>
       <h2>Arduino Code Snippet</h2>
