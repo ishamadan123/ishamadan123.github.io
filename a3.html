@@ -7,31 +7,117 @@
     <title>Example Student's HCDE 439 Physical Computing Page!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        body {
+        }
+        .image-container {
+          display: flex;
+          flex-direction: column; /* Stack elements vertically */
+        }
+    
+        .small-images {
+          display: flex;
+          flex-direction: row; /* Stack small images vertically */
+          /* Updated to align items to the top */
+          align-items: flex-start;
+        }
+    
+        .small-images img {
+          width: 220px; /* Adjust the width of small images as needed */
+          margin-bottom: 20px; /* Adjust the margin between small images */
+          margin-right: 20px;
+        }
+      </style>
   </head>
+
   <body style="background-color: #feffdb;">
+
     <h1>Assignment 3: Input Output</h1>
-    <div class="grid">
-        <img src="Two-InputOutput.jpg" />
-        <img src="One-InputOutput.jpg" />
-        <img src="Zero-InputOutput.jpg" />
-    </div>
     <br>
+    <div class="small-images">
+        <img src="Three-InputOutput.jpg" alt="Small Image" />
+        <img src="Two-InputOutput.jpg" alt="Small Image" />
+        <img src="One-InputOutput.jpg" alt="Small Image" />
+        <img src="Zero-InputOutput.jpg" alt="Small Image" />
+      </div>
+
     <h2>Introduction</h2>
-    <br>
-    <p>
-      For this assignment, we were tasked to create a schematic, circuit, and code that uses a sensor <b>(I chose
-      to use a photoresistor).</b> Since the output device could not be just a single LED, I wanted
-      to experiment with a new tool in our arduino kit, called the <b>1 digit 7-segment display.</b>
-      I thought it would be fun to play around with which LEDs could create letters, numbers, or patterns on this single character display.
-      I wanted certain characters to show up depending on the light resistor's sensors.
-    </p>
+
+    <div class = "header">
+        <p>
+            For this assignment, we were tasked to create a schematic, circuit, and code that uses a sensor <b>(I chose
+            to use a photoresistor)</b> in a voltage divider to change the state of an output device. 
+
+            <br><br>
+            
+            Since the output device could not be just a single LED, I wanted
+            to experiment with a new tool in our arduino kit, called the <b>1 digit 7-segment display.</b>
+            I thought it would be fun to play around with which LEDs could create letters, numbers, or patterns on this single character display.
+            I wanted certain characters to show up depending on the light resistor's sensors.
+
+            <br> <br>
+
+            On the right, you can see the final product where there is a <b>countdwon from 3, 2, 1, 0</b> as there is 
+            less light around the photoresistor.
+        </p>
+        <img src="InputOutput.gif" width = "700" />\
+    </div>
+    
     <br>
 
     <h2>The Set Up</h2>
     <br>
     <p>
-      I created a plan by
+        The schematic of the photoresistor is similar to that in class, with the <b>photoresistor connected to power</b> and 
+        the <b>second resistor connected to ground</b>. 
+
+        <br> <br>
+        
+        After researching the schematic of a 1-digit 7 segment display, I used the reference diagram on the very 
+        left to separate <b>letters a to g</b> to distinguish each individual LED light display. The second schematic on the right shows 
+        all <b>7 LEDs connected to different pins</b> on my arduino board with <b>220 Ohm resistors</b> in between. The display as a whole is connected to ground. 
+
+        <br><br>
+
+        The datasheet for the 7 segment display specifies <b>1.8 voltage drop </b>for the each color LED shown in photos. By using
+        the formula <b> V=I*R, </b> the <b>220 Ohm resistors</b> I used for each connection results in about <b>14.54mA</b> current for each.
+        This is under the maximum of <b>40mA current</b>, so it is justified. The schematic does not allow for multiple paths of current, 
+        since each LED is connected to a different pin.
+
     </p>
+    <br>
+
+    <img src="Schematic-InputOuput.jpeg"  />  
+
+    <br>
+
+    <h2>Voltage Divider Calculation</h2>
+    <br>
+
+    <p>
+        The actual values of the <b>voltage divider</b> will depend on the resistance of the 
+        photo-resistor (R1) in different lighting conditions. Given the code I wrote below, the 
+        minimum and maximum sensor values correspond to the minimum and maximum resistances of the photoresistor. 
+
+        <br> <br>
+        
+        I checked the data sheet to see that the typical resistance range of this photoresistor is between 
+        <b>400 Ohms and 9K Ohms. </b> Now, taking this estimated range into account, I calculated the two extremes 
+        of the voltage divider.
+
+        <br> <br>
+        
+        In my calculations, I estimated a voltage range between <b>0.53V and 0.96V.</b> This is within the typical 
+        operating range for an Arduino analog input, thus the <b>10K resistor for R2</b> is a justified choice. This fixed resistor is a 
+        standard and commonly available, and also helps keep the power consumption relatively low.
+
+    </p>
+
+    <div class="grid">
+        <img src="DataSheet-InputOutput.png" />
+        <img src="VoltageCalc-InputOutput.jpeg" />
+    </div>
 
     <br>
 
