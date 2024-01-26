@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body style="background-color: #feffdb;">
+    <h1>Assignment 3: Input Output</h1>
+    <div class="grid">
+        <img src="Two-InputOutput.jpg" />
+        <img src="One-InputOutput.jpg" />
+        <img src="Zero-InputOutput.jpg" />
+    </div>
+    <br>
+    <h2>Introduction</h2>
+    <br>
+    <p>
+      For this assignment, we were tasked to create a schematic, circuit, and code that uses a sensor <b>(I chose
+      to use a photoresistor).</b> Since the output device could not be just a single LED, I wanted
+      to experiment with a new tool in our arduino kit, called the <b>1 digit 7-segment display.</b>
+      I thought it would be fun to play around with which LEDs could create letters, numbers, or patterns on this single character display.
+      I wanted certain characters to show up depending on the light resistor's sensors.
+    </p>
+    <br>
+
+    <h2>The Set Up</h2>
+    <br>
+    <p>
+      I created a plan by
+    </p>
+
+    <br>
+
+    <h2>Questions</h2>
+
+    <br>
+
+    <h2>Code Strategy</h2>
+    <br>
+    <p>
+       In my circuit, I plugged the LED outputs into <b>pins 2, 3, 4, 5, 6, 7, and 9.</b> These all 
+       will correspond to the constants I defined and the pins I used <b>analogWrite()</b> on.
+
+       <br> <br>
+
+       The range that the sensor will take in will be from <b>0 to 1023</b> as defined. The <b>analogRead()</b> function
+       is used to read the real time sensorValue from the sensor's pin. However, I used the map function 
+       to <b>map</b> this range into values of <b>0 to 255</b>. This mapping was useful because I printed the sensorvalue to the Serial, 
+       and then played around with my hands covering the resistor. I understood the range of values (between 0 and 255) that 
+       associated with different levels of light sensitivity, and used those to identify <b>4 different ranges of sensor values</b>
+       that I could use in the <b>if statements</b> to create different LED visuals for each range. 
+
+    </p>
+    <div class="grid">
+        <img src="Serial-InputOutput.png" />
+    </div>
+    <br>
+
+    <div>
+      <h2>Arduino Code Snippet</h2>
+    <pre>
+        <code>
+          /*
+          Input Output Assignment 3
+          
+          This code begins by calibrating the sensor input. The sensor readings
+          during the first five seconds of the sketch execution define the minimum and
+          maximum of expected values attached to the sensor pin.
+          
+          Then, depending on the sensor value, the LED pin confuguration displays numbers counting
+          down for 3 to 0, dependent on hand covering the light sensisitve resistor.
+          */
+          
+          // These constants won't change:
+          const int sensorPin = A0;  // pin that the sensor is attached to
+          const int ledPin9 = 9; // pin that the LED is attached to (f in diagram)
+          const int ledPin7 = 7; // pin that the LED is attached to (c in diagram)
+          const int ledPin6 = 6; // pin that the LED is attached to (b in diagram)
+          const int ledPin5 = 5; // pin that the LED is attached to (a in diagram)
+          const int ledPin4 = 4; // pin that the LED is attached to (d in diagram)
+          const int ledPin3 = 3; // pin that the LED is attached to (e in diagram)
+          const int ledPin2 = 2; // pin that the LED is attached to (g in diagram)
+          
+          // variables:
+          int sensorValue = 0;   // the sensor value
+          int sensorMin = 1023;  // minimum sensor value
+          int sensorMax = 0;     // maximum sensor value
+          
+          
+          void setup() {
+          
+            // initialize serial communications at 9600 bps:
+            Serial.begin(9600);
+          
+            // turn on LED to signal the start of the calibration period:
+            pinMode(13, OUTPUT);
+            digitalWrite(13, HIGH);
+          
+            // calibrate during the first five seconds
+            while (millis() < 5000) {
+              sensorValue = analogRead(sensorPin);
+          
+              // record the maximum sensor value
+              if (sensorValue > sensorMax) {
+                sensorMax = sensorValue;
+              }
+          
+              // record the minimum sensor value
+              if (sensorValue < sensorMin) {
+                sensorMin = sensorValue;
+              }
+            }
+          
+            // signal the end of the calibration period
+            digitalWrite(13, LOW);
+          }
+          
+          void loop() {
+            // read the sensor:
+            sensorValue = analogRead(sensorPin);
+          
+            // in case the sensor value is outside the range seen during calibration
+            sensorValue = constrain(sensorValue, sensorMin, sensorMax);
+          
+            // apply the calibration to the sensor reading
+            sensorValue = map(sensorValue, sensorMin, sensorMax, 0, 255);
+          
+            // Print the current sensor value to the Serial Monitor
+            Serial.print("The current sensor value is: ");
+            Serial.println(sensorValue);
+          
+            // Display different numbers based on sensor value
+            if (sensorValue >=220) {
+              // Your hand is far from the resistor, display "3" by turning on specific LED lights
+              analogWrite(ledPin9, 0);
+              analogWrite(ledPin7, 255);
+              analogWrite(ledPin6, 255);
+              analogWrite(ledPin5, 255);
+              analogWrite(ledPin4, 255);
+              analogWrite(ledPin3, 0);
+              analogWrite(ledPin2, 255);
+            } else if (sensorValue >= 130 && sensorValue <= 220) {
+              // Your hand is closer, display "2" by turning on specific LED lights
+              analogWrite(ledPin9, 0);
+              analogWrite(ledPin7, 0);
+              analogWrite(ledPin6, 255); 
+              analogWrite(ledPin5, 255); 
+              analogWrite(ledPin4, 255); 
+              analogWrite(ledPin3, 255); 
+              analogWrite(ledPin2, 255); 
+            } else if (sensorValue >= 30 && sensorValue <= 130) {
+              // Your hand is even closer, display "1" by turning on specific LED lights
+              analogWrite(ledPin9, 255);
+              analogWrite(ledPin7, 0);
+              analogWrite(ledPin6, 0);
+              analogWrite(ledPin5, 0);
+              analogWrite(ledPin4, 0);
+              analogWrite(ledPin3, 255);
+              analogWrite(ledPin2, 0);
+            } else {
+              // Your hand is covering the light-sensitive resistor, display "0" by turning on specific LED lights
+              analogWrite(ledPin9, 255); 
+              analogWrite(ledPin7, 255); 
+              analogWrite(ledPin6, 255); 
+              analogWrite(ledPin5, 255); 
+              analogWrite(ledPin4, 255); 
+              analogWrite(ledPin3, 255); 
+              analogWrite(ledPin2, 0);
+            }
+            
+          }
+        </code>
+    </pre>
+
+
+    </div>
+    
+  </body>
+</html>
