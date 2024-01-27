@@ -58,7 +58,7 @@
 
             <br> <br>
 
-            On the right, you can see the final product where there is a <b>countdwon from 3, 2, 1, 0</b> as there is 
+            On the right, you can see the final product where there is a <b>countdown from 3, 2, 1, 0</b> as there is 
             less light around the photoresistor.
         </p>
         <img src="InputOutput.gif" width = "700" />\
@@ -102,13 +102,13 @@
 
         <br> <br>
         
-        I checked the data sheet to see that the typical resistance range of this photoresistor is between 
-        <b>400 Ohms and 9K Ohms. </b> Now, taking this estimated range into account, I calculated the two extremes 
+        I checked the data sheet to see that the min/max resistance range of this photoresistor is between 
+        <b>0.2M Ohms and 11K Ohms.</b> Now, taking this estimated range into account, I calculated the two extremes 
         of the voltage divider.
 
         <br> <br>
         
-        In my calculations, I estimated a voltage range between <b>0.53V and 0.96V.</b> This is within the typical 
+        In my calculations, I estimated a voltage range between <b>0.24V and 2.38V.</b> This is within the typical 
         operating range for an Arduino analog input, thus the <b>10K resistor for R2</b> is a justified choice. This fixed resistor is a 
         standard and commonly available, and also helps keep the power consumption relatively low.
 
@@ -124,6 +124,35 @@
     <h2>Questions</h2>
 
     <br>
+
+    <p>
+        <b>Question One</b>
+        <br> 
+        In my voltage divider, the variable resistor can in fact be either R1 or R2. In the example calculations below, 
+        you can see two scenarios where the variable resistor is different every time, which results in different voltage divide values. 
+        So, depending on how one wants to design the circuit to perform, either can be used.
+        <br> <br>
+        <img src="QuestionOne-InputOutput.jpeg" /> 
+        <br>
+        <b>Question Two</b>
+        <br>
+        In the GIF up above, it is a total of 4 seconds long. The animation starts with the photoresistor fully exposed to light. Thus, the 
+        resistance is low and the voltage drop is high. Then as my hand moves closer to the photoresistor, at around 2 seconds is when it goes completely 
+        dark for one second. this means the resistance is high and the voltage drop is low. Then I remove my hand and it goes back tot he original voltage drop.
+        <br> <br>
+        <img src="QuestionTwo-InputOutput.jpeg" height = "250" /> 
+        <br>
+        <b>Question Three</b>
+        <br>
+        To adapt the code for a 10-pit PWM and a 16-bit analog. I would change the map() and analogWrite codes as follows.
+        <br>
+        <b>sensorValue = map(sensorValue, sensorMin, sensorMax, 0, 65535);</b>
+        <br>
+        <b>analogWrite(ledPin7, 1023);</b>
+        <br>
+        <br>
+
+    </p>
 
     <h2>Code Strategy</h2>
     <br>
