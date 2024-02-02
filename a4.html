@@ -29,23 +29,69 @@
     </div>
     <br>
 
-    <h2>The Set Up</h2>
-    <br>
-    <p>
-        Below you can see the schematic representation of the circuit I had created. 
+    <h2>The Schematic</h2>
 
-        <br> <br>
+    <div class="header">
+      <img src="Schematic_Libraries.jpeg" />
+      <p>
+        The datasheet for green and red LED lights specify a <b>1.8 voltage drop.</b> By using the formula <b>V=I*R,</b> where V = 5 - 1.8 and R = 220 Ohms, 
+        the current results in about <b>14.54mA</b> for each. This is under the maximum of <b>30mA current max for LEDs</b>, so the resistor choice is justified.
 
-        Like previous projects, the two resistors I used for the LED lights (220 Ohms) are justified because
+        <br><br>
+        Using the specifications for the membrane keypad, I learned about the division of columns and rows that associated with each possible
+        pin connection on this tool. In the code below, you can see the mapping of <b>rows to pins 6-8</b>, and <b>columns to pins 2-5</b>. 
+
+        <br><br>
+        For the joystick, I only used the <b>x-axis values</b> in my code structure, and didn't use a SW pin, thus I only had three connections. The joystick 
+        was used as an analog input as the VRX was connected to <b>pin A1</b>. Lastly, the servo motor was attached the <b>pin 11</b>.
     </p>
+    </div>
 
     <div class = "grid">
 
     </div>
 
-    <br>
-
     <h2>Questions</h2>
+    <br>
+    <p>
+      <b>Question One</b>
+      <br>
+      Below is the graph example for a servo motor at pin 9 with the following code: <b>for (int i=0, i<180, i++){servo.write(i); delay(100);} </b>
+      Essentially, given the documetation of <b>20ms PWM period</b> for a servo motor that has different duty cycles depending on the 
+      angle and also a <b>delay of 100ms</b> in the code, a rectangle like structure is drawn on repeat. Within 2 seconds, I estimated how many times the code would loop 
+      and it may not be drawn to exact scale.
+      <br> <br>
+      <img src="QuestionOne_Libraries.jpeg" />
+      <br><br>
+      <b>Question Two</b>
+      <br> 
+      If my input device is leading to erroneous readings 1% of the time, the best way to address this is to <b>not include those erroneous values.</b> 
+      A pseudocode description of fixing this is written below. 
+      <br> 
+      1. Collect input readings from the input device based on a calibration mapping system
+      <br>
+      2. Create an if statement that catches erroneous values outside of the calibration range values
+      <br>
+      3. Once caught, either re-assign the erroneous input value to a max or min within the accepted range 
+      depending on what the value is, or discard the value by resetting the loop and reading the next input value.
+      
+      <br><br>
+      
+      <b>Question Two</b>
+      <br> 
+      If my input device is slightly noisy, the best way to address this is by identifying whether the value is up or down by 10%, and <b>filtering
+      it to a more reliable measurement value.</b> A pseudocode description of fixing this is written below. 
+      <br> 
+      1. Collect input readings from the input device based on a calibration system, identifying the max and min values.
+      <br>
+      2. Monitors the incoming measurements and check if they deviate more than a certain threshold (which can be set to 10%). This 
+      can be marked as potentially noisy.
+      <br>
+      3. Either disregard the noisy value if there is reason to believe it is too far an outlier, or replace it with a filtered value. 
+      This new value replacement can be a compromise between the original value and a more reliable estimate.
+        
+       
+    </p>
     <br>
 
     <h2>Code Strategy</h2>
