@@ -96,7 +96,17 @@
 
     <h2>Code Strategy</h2>
     <br>
+    Functionally, I wanted to be able to enter a pin code into the keypad to open the door. I assigned an <b>array password value</b> at the top of the code 
+    that is used to check off of later as the keypad inputs are taken in. I made sure to include a calibration of the joystick, moving it 
+    along to the x-axis to define max and min values, mapping them from <b>0 to 1023</b>. Then, I set a range of above 800 or below 200 for the joystick motion to 
+    open and close the door (ie move the servo). The lights were a fun addition to also indicate the movements of the servo motor.
 
+    I originally had it all in the loop method, but decided to split off <b>two separate methods</b> for the joystick calibration and also to move the servo and trun on 
+    the respective light. I felt that this helped my code feel and look cleaner. 
+    The <b>use of the Serial</b> was also helpful to identify different steps in the process and also make sure the code was picking up on the 
+    keypad and joystick values the way I wanted it to.
+
+    <br><br>
     <div>
       <h2>Arduino Code Snippet</h2>
     <pre>
