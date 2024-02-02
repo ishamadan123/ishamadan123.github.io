@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body style="background-color: #feffdb;">
+    <h1>Assignment 4: Libraries</h1>
+    <br>
+    <h2>Introduction</h2>
+    <br>
+    <p>
+        For this assignment, we were tasked to create a schematic, circuit, and code that uses parts from the kit that require a library. It needed to include both an
+        input part and an output part.
+        <br> <br>
+        I chose to create a project with a <b>joystick</b> and <b>keypad</b> (inputs), as well as a <b>servo</b> and <b>LED lights</b> (outputs). The overall
+        system came together with a fake door I created, where the joystick and keypad were different ways to lock (close) and unlock (open) the door (serv0). 
+        The lights also corresponded to the lock position of the door.
+        <br>
+    </p>   
+
+    <div class="header">
+      <img src="Libraries.gif" />
+      <img src="Libraries.jpg" />
+    </div>
+    <br>
+
+    <h2>The Set Up</h2>
+    <br>
+    <p>
+        Below you can see the schematic representation of the circuit I had created. 
+
+        <br> <br>
+
+        Like previous projects, the two resistors I used for the LED lights (220 Ohms) are justified because
+    </p>
+
+    <div class = "grid">
+
+    </div>
+
+    <br>
+
+    <h2>Questions</h2>
+    <br>
+
+    <div>
+      <h2>Arduino Code Snippet</h2>
+    <pre>
+        <code>
+            /*
+            Libraries Assignment 4
+                      
+            This code begins by calibrating the joystick input. The sensor readings
+            during the first five seconds of the sketch execution define the minimum and
+            maximum of expected values attached to the sensor pin.
+                      
+            Then, the joystick can be used to move a servo back and forth (opening and closing the door).
+            Alterhanitvely, the door has a "passocde." When this passcode is entered into the keypad, the door opens.
+            The closes at the press of * or #.        
+            */
+            
+            // Two libraries for the servo and the keypad
+            #include Servo.h
+            #include Keypad.h
+            
+            // Declare Servo and Keypad objects
+            Servo ServoMotor;
+            
+            // Password for keypad entry - password may be different in video as I tried different 3 character values
+            char password[] = "25A";
+            
+            // Position tracker for keypad entry
+            int position = 0;
+            
+            // Keypad setup
+            const byte ROWS = 4; // define 4 row matric
+            const byte COLS = 4; // define 4 column matrix
+            char keys[ROWS][COLS] = { // this is the exact layout of the keypad I am using
+              { '1', '2', '3', 'A' },
+              { '4', '5', '6', 'B' },
+              { '7', '8', '9', 'C' },
+              { '*', '0', '#', 'D' }
+            };
+            
+            // Define pin connections for keypad
+            byte rowPins[ROWS] = { 9, 8, 7, 6 }; // the row pins on keypad
+            byte colPins[COLS] = { 5, 4, 3, 2 }; // the column pins on keypad
+            
+            // Mapping the keypad keys to the pins I connected to
+            Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); 
+            
+            // Define pin connections for LEDs 
+            int RedpinLock = 13; // denotes door "closed"
+            int GreenpinUnlock = 12; // denotes door "opened"
+            
+            // Define analog pins for joystick (didn't use Yaxis)
+            int joyX = A1;
+            
+            // Calibration variables
+            int joyXMin = 0;
+            int joyXMax = 1023;
+            
+            void setup() {
+              // Begin serial communication for debugging
+              Serial.begin(9600);
+            
+              // Set output pin modes for LEDs 
+              pinMode(RedpinLock, OUTPUT);
+              pinMode(GreenpinUnlock, OUTPUT);
+            
+              // Attach Servo to pin 11
+              ServoMotor.attach(11);
+            
+              // Call the joystick calibration 
+              calibrateJoystick();
+            
+              // Initialize system in a locked position
+              LockedPosition(1);
+            }
+            
+            void loop() {
+              // Read X-axis value from joystick
+              int xAxisValue = analogRead(joyX); 
+            
+              // Apply calibration to the joystick reading
+              xAxisValue = constrain(xAxisValue, joyXMin, joyXMax);
+              xAxisValue = map(xAxisValue, joyXMin, joyXMax, 0, 1023);
+            
+              // Test prints of the joystick xValues to understand a good range
+              Serial.print("Joystick Xvalue:");
+              Serial.println(xAxisValue);
+            
+              // Map joystick values to servo angles
+              if (xAxisValue > 800) {
+                LockedPosition(1);  // Lock the system if less than 800
+              } 
+              if (xAxisValue < 200 ) {
+                LockedPosition(0);  // Unlock the system if greater than 200
+              }
+              
+              // Check for key presses on the keypad
+              char key = keypad.getKey();
+            
+              // Process keypad input
+              if (key) {
+            
+                // Test prints of the current key values to make sure inputs are correct
+                Serial.print("Current Key: ");
+                Serial.println(key);
+            
+                // Check for special keys '*' and '#'
+                if (key == '*' || key == '#') {
+                  position = 0; // position variable should only increment for password
+                  LockedPosition(1);  // Lock the system if special keys are pressed
+                } else if (key == password[position]) {
+                  position++; // update position value if the entered key is correct
+                } else {
+                  position = 0;  // Reset position if the entered key is incorrect
+                }
+            
+                // Check if the correct password is entered (ie key at position was correct three times in a row)
+                if (position == 3) {
+                  LockedPosition(0);  // Unlock the system since password is correct
+                }
+              }
+            
+              // Delay to control loop speed
+              delay(100);
+            }
+            
+            // Function to set system position (close door or open door) based on the locked parameter
+            void LockedPosition(int locked) {
+              if (locked == 1) {
+                digitalWrite(RedpinLock, HIGH); // red pin on indicates closed door
+                digitalWrite(GreenpinUnlock, LOW); // green pin off indicates closed door
+                ServoMotor.write(0);  // Move servo to 0 degrees (locked position)
+              } else {
+                digitalWrite(RedpinLock, LOW); // red pin off indicates open door
+                digitalWrite(GreenpinUnlock, HIGH); // green pin on indicates open door
+                ServoMotor.write(90);  // Move servo to 90 degrees (unlocked position)
+              }
+            }
+            
+            // Joystick calibration function
+            void calibrateJoystick() {
+              // Calibrate during the first five seconds
+              Serial.println("Calibrating Joystick. Move the joystick to its extremes within 5 seconds.");
+              unsigned long calibrateEndTime = millis() + 5000;
+            
+              // complete loop until calibration time is over
+              while (millis() < calibrateEndTime) {
+            
+                // read values as person moves the joystick on the x axis
+                int xAxisValue = analogRead(joyX);
+            
+                // Record the maximum joystick value
+                if (xAxisValue > joyXMax) {
+                  joyXMax = xAxisValue;
+                }
+            
+                // Record the minimum joystick value
+                if (xAxisValue < joyXMin) {
+                  joyXMin = xAxisValue;
+                }
+              }
+                // Print when completed calibrating
+                Serial.println("Joystick calibration complete.");
+            }
+        </code>
+    </pre>
+
+
+    </div>
+    
+  </body>
+</html>
