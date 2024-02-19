@@ -69,10 +69,50 @@
     </div>
     <br>
 
-
     <h2>Questions</h2>
     <br>
-
+    <p>
+        <b>Question One</b>
+        <br> <br>
+        According to the datasheet, the absolute maximum continuous drain current between pins 2 (Drain) and 3 (Source) is <b>32 A at 25°C.</b> and 
+        <b>22.6A at 100°C.</b> The absolute maximum pulsed drain current is <b>128 A.</b> 
+    </p>
+    <div class="grid">
+        <p>
+            <b>Question Two</b>
+            <br><br>
+            <img src="HighVoltage_Q2.jpeg" height="400" widht="400"/>
+        </p>
+        <p>
+            <b>Question Three</b>
+            <br><br>
+            <img src="HighVoltage_Q3.jpeg" height="400" width="500"/>
+        </p>
+    </div>
+    <br>
+    <p>
+        <b>Pseudocode For Question Three</b>
+        <br><br>
+        1. Define motor controls pins as integers where pins 9 and 10 are enables and pins 2,3,4,5 are inputs for motors A and B.
+        <br>
+        2. In the setup, set all the motor control pins as outputs
+        <br>
+        3. In the loop function, call 4 different external functions with a 2 second delay in between. Each function will correspond 
+        to a different task: moveForward, moveBackward, turnLeft(one motor forward one motor backward), and turnRight (one motor backword and one motor forward).
+        <br>
+        4. <b>moveForward():</b> use digitalWrite() to send HIGH to one input pin corresponding to each of the two motors, and LOW to the other input pin for each motor.
+        Use analogWrite() to write 255 to both enable pins for speed control.
+        <br>
+        5. <b>moveBackword():</b> use digitalWrite() to send HIGH to the second/opposite input pin as previous method to each of the two motors, and LOW to the input pins that were previously 
+        written as HIGH. This should flip the direction that both motors move. Use analogWrite() to write 255 to both enable pins for speed control.
+        <br>
+        6. <b>turnLeft():</b> use digitalWrite() to send LOW to the first pin of the first motor, high to the second pin of the first motor, high to the first pin of the second motor, 
+        and low to the second pin of the second motor. Use analogWrite() to write 255 to both enable pins for speed control.
+        <br>
+        7. <b>turnRight():</b> use digitalWrite() to send HIGH to the first pin of the first motor, low to the second pin of the first motor, low to the first pin of the first motor, 
+        and high to the second pin of the second motor. Use analogWrite() to write 255 to both enable pins for speed control.
+    </p>
+    
     <br>
 
     <h2>Code Strategy</h2>
