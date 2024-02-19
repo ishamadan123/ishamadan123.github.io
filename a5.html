@@ -12,13 +12,63 @@
     <h1>Assignment 5: Higher Voltages and Resistors!</h1>
     <br>
     <h2>Introduction</h2>
-    <br> 
+    <div class = "grid">
+        <img src="HighVoltage.gif"/>
+        <img src="HighVoltagePhoto.jpg"/>
+        <img src="HighVoltagePhoto2.jpg"/>
+    </div>
+    <br>
+    <p>
+        For this assignment, we were tasked to use a transistor to control load power separate from logic power. I had to use a 
+        load output device <b>(LED light strips)</b>, and an input sensor <b>(IR Receiver)</b> with a library. In the GIF above, 
+        the remote control turns the strips on, and then the buttons 1, 2, and 3, control different pattern modes on the strip. 
+        Mode number 1 is <b>blinking</b>, mode number 2 is <b>fading</b>, and mode number 3 is a <b>blinking pattern</b>.
+    </p>
+    <br>
 
     <h2>The Schematic</h2>
 
-    <div class = "grid">
+    <div class = "header">
+        <img src="HighVoltageSchematic.jpeg"/>
+        <p>
+            In the schematic to the left, the LED strip (which has a lot more parallels than what is shown in the drawing) is connected to 
+            the 12V load power. Then, it connects to the drain of the N-MOSFET which then connects to <b>pin 9</b> and ground. 
+            I connected the IR Receiver to <b>pin 7</b> to be able to capture button presses from the remote. 
+            <br><br>
+            I didn't draw the connections on the breadboard, but feel free to use the images above for clearer 
+            representations of the project. 
+
+        </p>
 
     </div>
+    <br>
+
+    <h2>Calculations</h2>
+    <div class = "grid">
+        <p>
+            <b>LED Light Strip Calculation</b>
+            <br> <br>
+            Considering the LED schematic is 100 parallel strips of 3 white LEDs each, I calculated the total 
+            current and voltage. In one parallel strip considering white LEDs have a 3.3 voltage drop, 3 * 3.3 = <b>9.9V</b> total in one series. 
+            12V power - 9.9V drop = <b>2.1V</b> total in one series. Each resistor is <b>240 Ohms</b>, so in one set of 3 lights the current is <b>8.75mA.</b>
+            <br> <br>
+            The total current is <b>0.875A.</b> since 8.75mA * 100 = 875mA. The total voltage is <b>12V</b> since it stays the same in parallel.
+        </p>
+
+        <p>
+            <b>NMOSFET Calculation</b>
+            <br> <br>
+            The 12V load power is within a safe operating range of this transistor. The NMOSFET is used as a switch controlled by pin 9. 
+            When pin 9 is HIGH, the NMOSFET conducts, allowing current to flow through the LED strips. When pin 9 is LOW, the NMOSFET is off, 
+            cutting off the current. 
+            <br> <br>
+            The LED light strip current of 0.875A is <b> within the 32A operating range.</b>
+
+        </p>
+
+    </div>
+    <br>
+
 
     <h2>Questions</h2>
     <br>
