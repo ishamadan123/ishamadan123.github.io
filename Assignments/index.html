@@ -1,69 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.js"></script>
+    <script src="https://unpkg.com/@gohai/p5.webserial@^1/libraries/p5.webserial.js"></script>
+    <title>Button Press!</title>
+    <style>
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+      }
 
-    <title>HCDE 439 Physical Computing Page</title>
-
-    <link href="style.css" rel="stylesheet" />
+      canvas {
+        display: block;
+      }
+    </style>
   </head>
-  <body style="background-color: #feffdb;">
-    <h1 style="font-family: 'Dancing Script', cursive; font-size: 45px;" > HCDE 439 Physical Computing Page </h1>
-    <div class="header">
-      <img src="me-photo.JPG" height="400" width="500"/>
-      <p>
-        Hi, I'm Isha Madan! <br> <br> I'm a senior in HCDE and also pursuing a business minor. I spend most of 
-        my time on a dance team at UW, and also enjoy painting and drawing in my free time. I also have a 2 year 
-        old labradoodle I miss every day that I'm away from home in Dallas, Texas. <br> <br>
-        I am interested in customer experience design and product design so I am excited for to go beyond 2D design in this 
-        class and learn how to connect a lot of skills I've learned throughout college so far!
-      </p>
-    </div>
-
-    <div class="grid">
-      <div class="assignment">
-        <a href="a1.html">
-          <h2>1: Blink!</h2>
-          <img src="BlinkVideo.gif" />
-        </a>
-        <p> 3 LED lights blink independently. </p>
-      </div>
-
-      <div class="assignment">
-        <a href="a2.html">
-          <h2>2: Fade!</h2>
-          <img src="FadeVideo.gif" />
-        </a>
-        <p> At the press of a button, one LED fades while the other two turn on. </p>
-      </div>
-
-      <div class="assignment">
-        <a href="a3.html">
-          <h2>3: In-Out!</h2>
-          <img src="InputOutput.gif" />
-        </a>
-        <p> As a photoresistor experiences bright light to darkness at the move of my hand, 
-          the LED light displays a countdown.
-        </p>
-      </div>
-
-      <div class="assignment">
-        <a href="a4.html">
-          <h2>4: Libraries!</h2>
-          <img src="Libraries.gif" />
-        </a>
-        <p> A joystick and a keypad control the opening and closing of a door (servo). </p>
-      </div>
-
-      <div class="assignment">
-        <a href="a5.html">
-          <h2>5: Higher Voltages!</h2>
-          <img src="HighVoltage.gif"/>
-        </a>
-        <p> Remote control IR sensor changes LED strip settings </p>
-      </div>
-
-    </div>
+  <body>
+    <script src="index.js"></script>
   </body>
 </html>
