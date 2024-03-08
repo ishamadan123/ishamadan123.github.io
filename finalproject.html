@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+ 
+    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body style="background-color: #feffdb;">
+    <h1>Final Project: Pomodoro Study Timer!</h1>
+
+    <div class="grid">
+      <img src="Final_HeadImage.jpg" />
+      <img src="Final_ExampleOne.PNG" />
+      <img src="Final_ExampleTwo.PNG" />
+    </div>
+    <br>
+
+    <h2>Introduction</h2>
+
+    <br>
+
+    <p>
+      When I began this final project, I went in with the intent of creating an automatic hand soap dispensing system. When someone's hand is detected at a 
+      certain distance from the sensor, I wanted the hand soap handle gets pressed. However, after getting the full code functionality to work, my servo motor didn't 
+      have enough power to press the handle soap - so after hours of trying - I decided to change up my project concept to a new product with the exact same technical system and orientation. 
+      <br><br>
+      My new concept became the <b>Pomodoro Study Helper.</b> In this new study helper tool, I wanted to be able to mimic the pomodoro study technique which is my favorite technique for long study hours. 
+      The technique is 20-25 minute stretches of focused work broken by 5 minute long breaks. Although online pomodoro time keepers exist, I wanted to create a physical object that I could use while I study.
+      This machine is super helpful for me because it just keeps me off my phone for distractions.
+    </p>
+    <br>
+
+    <img src="Final_ConceptSketch.jpeg" height = "250"/>
+
+    <br>
+
+    <h2>The Set-Up</h2>
+    <div class="grid">
+      <p>
+        <b>Bill of Materials --------------------</b>
+        <br><br>
+        1. Arduino Uno
+        <br>
+        2. 9V battery (for power)
+        <br>
+        3. Ultrasonic sensor (for hand motion)
+        <br>
+        4. Servo Motor (brings the sign up)
+        <br>
+        5. Assorted resistors (for LED current limiting)
+        <br>
+        6. Matrix LED Display (for timer)
+        <br>
+        7. 3 LED lights (for system)
+        <br> <br>
+        <b> Resistor Choices --------------------</b>
+        <br><br>
+        Considering the blue LED has a 3.3V drop and the yellow/red LEDs have a 1.8V drop. 
+        I calculated 85 ohms as a good choice for the blue and 160 ohms for the yellow/red considering the formula
+        5V - Voltage Drop = 0.02A * R. According to my kit, I chose to use 100 ohms and 220 ohms which still
+        keeps the current under the maximum of 30mA.
+        <br> <br>
+
+      </p>
+
+      <p>
+
+        <b> Functional Strategy --------------------</b>
+        <br><br>
+        
+        <b>Input: Ultrasonic Sensor </b>
+        <br>
+        Begin system when hand detected at a distance of 5
+        <br><br>
+        <b>Outputs: Servo Motor, LED lights, Matrix Light </b>
+        <br>
+        1. Servo motor moves to bring “Pomodoro” Sign up 
+        <br>
+        2. Blue light turns on, “STUDY” displayed, then “20” for 20 minutes.
+        <br>
+        3. Yellow light turns on and blue light turns off during the last 5 minutes of the 20 minute session.
+        <br>
+        4. Red light turns on and yellow light turns off. “BREAK” displayed, then “5” for 5 minutes.
+        <br>
+        5. Smiley face displayed after break is completed marking the end of one study cycle.
+        <br>
+        6. System repeats this cycle 4 times then turns off.
+        
+      </p>
+        
+    </div>
+
+    <h2>Schematic</h2>
+    <br>
+    <img src="Final_Schematic.jpeg" />
+
+    <br>
+
+    <h2>Code Strategy</h2>
+    <br>
+    <p>
+      My code uses two libraries, <b>the Servo library</b>, and a library called <b>LedControl</b> that I used for the Matrix lights. 
+      The one main input, the ultrasonic sensor, is what begins the whole system. I used a method I called <b>calculateDistance</b> to translate the values accepted 
+      by the ultrasonic sensor into an integer value. I had the system only “begin” when this distance was less than 5, which was a number I decided on after testing it a couple times. 
+      <br><br>
+      Since I want this entire system of the study and break series to <b>repeat 4 times</b>, I had a for loop in my initial loop that ran an external method 4 times. Now, this external method is 
+      essentially where the meat of the code happens. This method called <b>handleHandDetection</b> starts by turning the blue light on, and moves the servo to 180 degrees (sign moves up). Then 
+      I use millis to keep track of time. More external methods help me handle the code to display numbers and letters on the Matrix itself. I had a <b>displaySTUDYOnMatrix, displayTwentyOnMatrix, 
+      displayFiveOnMatrix, displayBREAKOnMatrix, and displaySmileyOnMatrix.</b> I used online research to figure out how to display these light patterns. 
+      <br><br>
+      Going back to what is happening in the handlehandetection code, the blue light is on and STUDY is displayed, then the number 20 shows up. For the sake of the demo, my values are in seconds where I used <b>delays</b> after. For example, the displayTwentyOnMatrix is called, 
+      then a delay, and that’s why it would stay put for a long amount of time. Following the functional strategy from earlier, the yellow light turns on, then the 
+      red light turns on, BREAK is displayed, and the number 5 is displayed. Then comes the smiley face!
+      <br><br>
+      After this class, I intend to modify the delays to be longer to <b>account for minutes</b> instead of seconds.
+    </p>
+
+    <div class="grid">
+      <img src="Final_CircuitOne.jpg" />
+      <img src="Final_CircuitTwo.jpg" />
+      <img src="Final_CircuitThree.jpg" />
+    </div>
+
+    <br>
+
+    <h2>Demo Video</h2>
+    <br>
+
+    <iframe width="800" height="450" src="https://www.youtube.com/embed/4IfIfgwogaQ" frameborder="0" allowfullscreen></iframe>
+    
+    <br>
+    <div>
+    <h2>Arduino Code Snippet</h2>
+    <pre>
+        <code>
+            #include Servo.h // Include the Servo library
+            #include LedControl.h // Include the LedControl library for controlling matrix display
+            
+            // Define pin numbers for ultrasonic sensor, lights, and LED matrix
+            const int trigPin = 10;
+            const int echoPin = 11;
+            const int blueLight = 8;
+            const int yellowLight = 9;
+            const int redLight = 7;
+            const int matrixDin = 6;
+            const int matrixCS = 5;
+            const int matrixCLK = 4;
+            
+            long duration; // Variable to store the duration of the ultrasonic pulse
+            int distance; // Variable to store the distance measured by the ultrasonic sensor
+            Servo myServo; // Create a Servo object to control the servo motor
+            LedControl lc = LedControl(matrixDin, matrixCLK, matrixCS, 1); // Create a LedControl object for the LED matrix
+            
+            unsigned long startTime; // Variable to store the start time for timing operations
+            bool handDetected = false; // Flag to indicate if a hand motion is detected
+            bool matrixRunning = false; // Flag to indicate if the LED matrix is running
+            int cycleCount = 0; // Counter for the number of cycles completed
+            
+            void setup() {
+              myServo.attach(12); // Attach the servo motor to pin 12
+              myServo.write(0); // Set the initial position of the servo motor to 0 degrees
+            
+              // Set the pin modes for ultrasonic sensor, lights, and LED matrix
+              pinMode(trigPin, OUTPUT);
+              pinMode(echoPin, INPUT);
+              pinMode(blueLight, OUTPUT);
+              pinMode(yellowLight, OUTPUT);
+              pinMode(redLight, OUTPUT);
+            
+              // Initialize the LED matrix
+              lc.shutdown(0, false); // Wake up the MAX72XX from power-saving mode
+              lc.setIntensity(0, 8); // Set the brightness level of the display
+              lc.clearDisplay(0); // Clear the display
+            
+              Serial.begin(9600); // Initialize serial communication
+            }
+            
+            void loop() {
+              // Check for hand motion detection
+              if (calculateDistance() < 5 && !handDetected) { 
+                handDetected = true; // Set the hand detection flag if a hand motion is detected
+              }
+            
+              // Start the cycle only if hand is detected
+              if (handDetected) {
+                myServo.write(0); // Reset the servo motor to 0 degrees
+            
+                if (cycleCount < 4) { // Continue the code until 4 cycles are completed (pomodoro technique)
+                  for (int j = 0; j < 4; j++) { 
+                    handleHandDetection(); // Start the cycle
+                  }
+                  cycleCount++; // Increment the cycle count to keep track
+                } else { // If 4 cycles are completed
+                  // Turn off all lights and reset servo motor
+                  digitalWrite(blueLight, LOW);
+                  digitalWrite(yellowLight, LOW);
+                  digitalWrite(redLight, LOW);
+                  myServo.write(0); // Reset servo motor to 0 degrees
+                  cycleCount = 0; // Reset cycle count
+                  handDetected = false; // Reset hand detection flag
+                  delay(500); // Wait for half a second before restarting the cycle
+                }
+              }
+            }
+            
+            // Function to handle hand detection
+            void handleHandDetection() {
+              digitalWrite(blueLight, HIGH); // Turn on blue light
+            
+              // Move servo motor to 180 degrees
+              myServo.write(180);
+              delay(500);
+            
+              // Start LED matrix display
+              startTime = millis();
+              matrixRunning = true;
+            
+              // Display "STUDY" once
+              displaySTUDYOnMatrix();
+            
+              // Display "20" for 20 seconds
+              displayTwentyOnMatrix();
+              delay(15000); // Display for 15 seconds
+            
+              displayTwentyOnMatrix();
+              // Turn off blue light and turn on yellow light for the last 5 seconds while "20" still displayed
+              digitalWrite(blueLight, LOW);
+              digitalWrite(yellowLight, HIGH);
+              delay(5000);
+              digitalWrite(yellowLight, LOW);
+            
+              digitalWrite(redLight, HIGH);
+              // Display BREAK once
+              displayBREAKOnMatrix();
+            
+              // Display number 5 for 5 seconds
+              displayFiveOnMatrix();
+              delay(10000);
+            
+              // Display smiley face for the remaining 5 seconds
+              displaySmileyOnMatrix();
+              
+              lc.clearDisplay(0); // Clear LED matrix display
+              digitalWrite(redLight, LOW); // Turn off red LED
+              matrixRunning = false; // Reset matrix running flag
+            }
+            
+            // Function to calculate distance using ultrasonic sensor
+            int calculateDistance() {
+              digitalWrite(trigPin, LOW);
+              delayMicroseconds(5);
+              digitalWrite(trigPin, HIGH);
+              delayMicroseconds(10);
+              digitalWrite(trigPin, LOW);
+              duration = pulseIn(echoPin, HIGH);
+              distance = duration * 0.034 / 2;
+              return distance;
+            }
+            
+            // Function to display "STUDY" on LED matrix
+            void displaySTUDYOnMatrix() {
+              // Define bitmap arrays for each letter
+              byte S[] = {B00000000,B00111100,B00100000,B00111100,B00000100,B00000100,B00111100,B00000000};
+              byte T[] = {B00000000,B01111100,B00010000,B00010000,B00010000,B00010000,B00010000,B00000000};
+              byte U[] = {B00000000,B01000010,B01000010,B01000010,B01000010,B00100100,B00011000,B00000000};
+              byte D[] = {B00000000,B00111000,B00100100,B00100010,B00100010,B00100100,B00111000,B00000000};
+              byte Y[] = {B00000000,B01000100,B00101000,B00010000,B00010000,B00010000,B00010000,B00000000};
+            
+              // Display each letter with a delay
+              lc.setRow(0, 0, S[0]);
+              lc.setRow(0, 1, S[1]);
+              lc.setRow(0, 2, S[2]);
+              lc.setRow(0, 3, S[3]);
+              lc.setRow(0, 4, S[4]);
+              lc.setRow(0, 5, S[5]);
+              lc.setRow(0, 6, S[6]);
+              lc.setRow(0, 7, S[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, T[0]);
+              lc.setRow(0, 1, T[1]);
+              lc.setRow(0, 2, T[2]);
+              lc.setRow(0, 3, T[3]);
+              lc.setRow(0, 4, T[4]);
+              lc.setRow(0, 5, T[5]);
+              lc.setRow(0, 6, T[6]);
+              lc.setRow(0, 7, T[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, U[0]);
+              lc.setRow(0, 1, U[1]);
+              lc.setRow(0, 2, U[2]);
+              lc.setRow(0, 3, U[3]);
+              lc.setRow(0, 4, U[4]);
+              lc.setRow(0, 5, U[5]);
+              lc.setRow(0, 6, U[6]);
+              lc.setRow(0, 7, U[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, D[0]);
+              lc.setRow(0, 1, D[1]);
+              lc.setRow(0, 2, D[2]);
+              lc.setRow(0, 3, D[3]);
+              lc.setRow(0, 4, D[4]);
+              lc.setRow(0, 5, D[5]);
+              lc.setRow(0, 6, D[6]);
+              lc.setRow(0, 7, D[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, Y[0]);
+              lc.setRow(0, 1, Y[1]);
+              lc.setRow(0, 2, Y[2]);
+              lc.setRow(0, 3, Y[3]);
+              lc.setRow(0, 4, Y[4]);
+              lc.setRow(0, 5, Y[5]);
+              lc.setRow(0, 6, Y[6]);
+              lc.setRow(0, 7, Y[7]);
+              delay(500);
+            
+              lc.clearDisplay(0); // Clear the LED matrix display
+            }
+            
+            // Function to display "BREAK" on LED matrix
+            void displayBREAKOnMatrix() {
+              // Define bitmap arrays for each letter
+              byte B[] = {B01111000,B01001000,B01001000,B01110000,B01001000,B01000100,B01000100,B01111100};
+              byte R[] = {B00000000,B00111000,B00100100,B00100100,B00111000,B00100100,B00100100,B00000000};
+              byte E[] = {B00000000,B00111100,B00100000,B00111000,B00100000,B00100000,B00111100,B00000000};
+              byte A[] = {B00000000,B00111100,B00100100,B00100100,B00111100,B00100100,B00100100,B00000000};
+              byte K[] = {B00000000,B00100100,B00101000,B00110000,B00101000,B00100100,B00100100,B00000000};
+            
+              // Display each letter with a delay
+              lc.setRow(0, 0, B[0]);
+              lc.setRow(0, 1, B[1]);
+              lc.setRow(0, 2, B[2]);
+              lc.setRow(0, 3, B[3]);
+              lc.setRow(0, 4, B[4]);
+              lc.setRow(0, 5, B[5]);
+              lc.setRow(0, 6, B[6]);
+              lc.setRow(0, 7, B[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, R[0]);
+              lc.setRow(0, 1, R[1]);
+              lc.setRow(0, 2, R[2]);
+              lc.setRow(0, 3, R[3]);
+              lc.setRow(0, 4, R[4]);
+              lc.setRow(0, 5, R[5]);
+              lc.setRow(0, 6, R[6]);
+              lc.setRow(0, 7, R[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, E[0]);
+              lc.setRow(0, 1, E[1]);
+              lc.setRow(0, 2, E[2]);
+              lc.setRow(0, 3, E[3]);
+              lc.setRow(0, 4, E[4]);
+              lc.setRow(0, 5, E[5]);
+              lc.setRow(0, 6, E[6]);
+              lc.setRow(0, 7, E[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, A[0]);
+              lc.setRow(0, 1, A[1]);
+              lc.setRow(0, 2, A[2]);
+              lc.setRow(0, 3, A[3]);
+              lc.setRow(0, 4, A[4]);
+              lc.setRow(0, 5, A[5]);
+              lc.setRow(0, 6, A[6]);
+              lc.setRow(0, 7, A[7]);
+              delay(500);
+            
+              lc.setRow(0, 0, K[0]);
+              lc.setRow(0, 1, K[1]);
+              lc.setRow(0, 2, K[2]);
+              lc.setRow(0, 3, K[3]);
+              lc.setRow(0, 4, K[4]);
+              lc.setRow(0, 5, K[5]);
+              lc.setRow(0, 6, K[6]);
+              lc.setRow(0, 7, K[7]);
+              delay(500);
+            
+              lc.clearDisplay(0); // Clear the LED matrix display
+            }
+            
+            // Function to display a smiley face on the LED matrix
+            void displaySmileyOnMatrix() {
+              // Define bitmap array for smiley face
+              byte smiley[] = {B00000000,B01000010,B00000000,B00000000,B10000101,B01111110,B00000000,B00000000};
+            
+              // Display smiley face with a delay
+              lc.setRow(0, 0, smiley[0]);
+              lc.setRow(0, 1, smiley[1]);
+              lc.setRow(0, 2, smiley[2]);
+              lc.setRow(0, 3, smiley[3]);
+              lc.setRow(0, 4, smiley[4]);
+              lc.setRow(0, 5, smiley[5]);
+              lc.setRow(0, 6, smiley[6]);
+              lc.setRow(0, 7, smiley[7]);
+              delay(10000);
+            
+              lc.clearDisplay(0); // Clear the LED matrix display
+            }
+            
+            // Function to display "20" on LED matrix
+            void displayTwentyOnMatrix() {
+              // Define bitmap array for "20"
+              byte twenty[] = {
+                B00000000,
+                B11101110,
+                B00101010,
+                B00101010,
+                B11001010,
+                B10001010,
+                B10001010,
+                B11101110
+              };
+            
+              // Display "20" with a delay
+              lc.setRow(0, 0, twenty[0]);
+              lc.setRow(0, 1, twenty[1]);
+              lc.setRow(0, 2, twenty[2]);
+              lc.setRow(0, 3, twenty[3]);
+              lc.setRow(0, 4, twenty[4]);
+              lc.setRow(0, 5, twenty[5]);
+              lc.setRow(0, 6, twenty[6]);
+              lc.setRow(0, 7, twenty[7]);
+            
+              delay(20000); // Display "20" for 20 seconds
+            }
+            
+            // Function to display "5" on LED matrix
+            void displayFiveOnMatrix() {
+              // Define bitmap array for "5"
+              byte five[] = {
+                B00111100,
+                B00100000,
+                B00100000,
+                B00111100,
+                B00000100,
+                B00000100,
+                B01000100,
+                B00111100
+              };
+            
+              // Display "5" with a delay
+              lc.setRow(0, 0, five[0]);
+              lc.setRow(0, 1, five[1]);
+              lc.setRow(0, 2, five[2]);
+              lc.setRow(0, 3, five[3]);
+              lc.setRow(0, 4, five[4]);
+              lc.setRow(0, 5, five[5]);
+              lc.setRow(0, 6, five[6]);
+              lc.setRow(0, 7, five[7]);
+            
+              delay(10000); // Display "5" for 10 seconds
+            }   
+        </code>
+    </pre>
+    </div>
+    
+  </body>
+</html>
